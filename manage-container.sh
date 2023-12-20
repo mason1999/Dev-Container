@@ -9,6 +9,8 @@ HOST_PORT=2003
 CONTAINER_PORT=2003
 
 create() {
+    # Create a file system in the containers folder which we build
+    mkdir -p "${HOME}/Desktop/containers/${MAPPED_FOLDER_NAME}"
     # Build Docker image
     docker build -t "${IMAGE_NAME}" .
     # Run image as container
@@ -53,7 +55,8 @@ The ports which are currently in use are: ${ports_in_use}
 Flags:
 The available options are [-c|-d|-h] are:
     -c: Creating and running images and containers
-    -d: Stopping and removing images and containers -h: Getting help for the script
+    -d: Stopping and removing images and containers 
+    -h: Getting help for the script
 EOF
     ;;
 
