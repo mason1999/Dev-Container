@@ -3,6 +3,7 @@ WORKDIR /
 SHELL ["usr/bin/bash", "-c"]
 
 ######################################## Dependencies installation ########################################
+RUN apt-get update --fix-missing
 RUN apt-get update
 RUN yes | unminimize -y \
     man \
