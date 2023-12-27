@@ -27,7 +27,7 @@ This is a repository dedicated to running creating a development environment on 
 - To delete the built image and delete the container, run the script `./manage-container.sh -d`. This will automatically delete the mounted file system on the host located in `~/Desktop/containers/test_Desktop` (as `test` is the default project name which can be changed by altering the `PROJECT_NAME` variable in the `manage-containers.sh` script).
 
 # Working with VSCode
-- Here is a minimalist config available for your `settings.json` vscode file:
+- Here is a minimalist config available for your `settings.json` vscode file. Only the vim extension was being used here:
 ```
 {
     // --------------------- Have no welcome screen or minimap on startup ---------------------
