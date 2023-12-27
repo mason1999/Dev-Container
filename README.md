@@ -16,5 +16,14 @@ This is a repository dedicated to running creating a development environment on 
 - To build an image and run the container, run the script `./manage-container.sh -c`.
 - To delete the built image and delete the container, run the script `./manage-container.sh -d`.
 
+# Working with VSCode
+- Ensure that the following json object is in your `keybindings.json` vscode file:
+```
+{
+    "key": "ctrl+p",
+    "command": "-workbench.action.quickOpen"
+}
+```
+
 # Summary of uninstall
 To uninstall Docker run the uninstall script: `uninstall-docker-desktop.sh`.
