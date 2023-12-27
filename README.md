@@ -5,7 +5,7 @@ This is a repository dedicated to running creating a development environment on 
 ## Step 1: Prerequisites
 - Ensure `xclip` is installed (this should be installed on a normal Ubuntu environment by default).
 - Download a nerdfond (e.g Hack). [Click here](https://github.com/ryanoasis/nerd-fonts) to see the nerd fonts which are available to be installed.
-- Download VScode and ensure that `Dev Containers` is installed.
+- Download VScode and ensure that the extension `Dev Containers` is installed.
 ## Step 2: Docker
 - Install: To install Docker via Docker Desktop run the script: `install-docker-desktop.sh`.
 - Sign into Docker Desktop (Create an account if you have not already done that).
