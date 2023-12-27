@@ -12,7 +12,7 @@ This is a repository dedicated to running creating a development environment on 
 - Go to `Docker Desktop > Settings > Resources > File Sharing` and add `/tmp` to the list of folders which are allowed to be mounted. After that restart `Docker Desktop`.
 
 # Summary of running docker
-- To get help for the usage of the script, run the script `./manage-container-h`. This outputs a short summary of how to use the container.
+- To get help for the usage of the script, run the script `./manage-container -h`. This outputs a short summary of how to use the container.
 - To build an image and run the container, run the script `./manage-container.sh -c`.
 - To delete the built image and delete the container, run the script `./manage-container.sh -d`.
 
