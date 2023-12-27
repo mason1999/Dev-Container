@@ -1,5 +1,5 @@
 # Overview
-This is a repository dedicated to running creating a development environment on an Ubuntu environment.
+This is a repository dedicated to running and creating a development environment on an Ubuntu environment.
 
 # Summary of installation
 ## Step 1: Prerequisites
