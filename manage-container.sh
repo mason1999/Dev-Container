@@ -30,7 +30,7 @@ delete() {
     # Remove the image
     docker rmi "${IMAGE_NAME}"
     # Remove the host folder
-    rm -rf "${HOLD_FOLDER_PATH}"
+    rm -rf "${HOST_FOLDER_PATH}"
 }
 
 help() {
