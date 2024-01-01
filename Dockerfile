@@ -5,9 +5,8 @@ SHELL ["usr/bin/bash", "-c"]
 ######################################## Dependencies installation ########################################
 RUN apt-get update --fix-missing
 RUN apt-get update
-RUN yes | unminimize -y \
-    man \
-    manpages-posix
+RUN yes | unminimize -y man manpages-posix
+RUN yes | apt-get install man
 
 RUN apt-get install -y curl
 RUN apt-get install -y git
