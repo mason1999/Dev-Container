@@ -50,6 +50,18 @@ RUN apt-get install -y gnupg software-properties-common && \
     apt-get update && \
     apt-get install terraform
 
+# Install nodejs
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
+    apt-get install -y nodejs
+
+# Install pip for python
+RUN curl -o script.py https://bootstrap.pypa.io/get-pip.py && \
+    echo '#! /usr/bin/python3' > install-pip.py && \
+    tail -n +2 script.py >> install-pip.py && \
+    chmod u+x install-pip.py && \
+    ./install-pip.py && \
+    rm -rf script.py install-pip.py
+
 ######################################## Create another user ########################################
 RUN apt-get install sudo
 RUN useradd testuser1 --create-home --groups sudo --shell /usr/bin/zsh && printf "WeakPassword\nWeakPassword" | passwd testuser1
