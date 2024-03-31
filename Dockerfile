@@ -16,7 +16,12 @@ RUN apt-get install -y file
 RUN apt-get install -y iproute2
 RUN apt-get install -y xclip # For nvim to work
 RUN apt-get install -y unzip jq # For ohmyposh
+RUN apt-get install -y gnupg2 ca-certificates lsb-release ubuntu-keyring # for nginx
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash # For AZ CLI
+
+# For nginx and it's dependencies
+RUN curl https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
+RUN if [[ $(gpg --dry-run --quiet --no-keyring --import --import-options import-show /usr/share/keyrings/nginx-archive-keyring.gpg | grep -vE '(pub|uid)' | sed 's/ //g') == "573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62" ]]; then echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" | tee /etc/apt/sources.list.d/nginx.list && echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | tee /etc/apt/preferences.d/99nginx && apt-get update && apt-get install -y nginx; else rm -rf "/usr/share/keyrings/nginx-archive-keyring.gpg"; fi
 
 # For gh cli and it's dependencies
 RUN type -p curl >/dev/null || (apt update && apt install curl -y) && \
