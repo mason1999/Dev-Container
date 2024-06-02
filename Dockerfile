@@ -64,6 +64,12 @@ RUN curl -o script.py https://bootstrap.pypa.io/get-pip.py && \
     ./install-pip.py && \
     rm -rf script.py install-pip.py
 
+# Install dependencies for pyenv
+ENV DEBIAN_FRONTEND=noninteractive
+RUN echo "tzdata tzdata/Areas select Australia" | debconf-set-selections && \
+    echo "tzdata tzdata/Zones/Australia select Sydney" | debconf-set-selections
+RUN apt-get update && apt-get install -y build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev curl libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+
 ######################################## Create another user ########################################
 RUN apt-get install sudo
 RUN useradd testuser1 --create-home --groups sudo --shell /usr/bin/zsh && printf "WeakPassword\nWeakPassword" | passwd testuser1
