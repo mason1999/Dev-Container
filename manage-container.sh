@@ -14,7 +14,7 @@ create() {
     # Create a file system in the containers folder which we build
     mkdir -p "${HOST_FOLDER_PATH}"
     # Build Docker image
-    docker build -t "${IMAGE_NAME}" .
+    docker build --no-cache -t "${IMAGE_NAME}" .
     # Run image as container
     docker run -d -it -p "${HOST_PORT}:${CONTAINER_PORT}" -e DISPLAY \
         -v /tmp/.X11-unix:/tmp/.X11-unix \

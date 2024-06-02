@@ -8,14 +8,16 @@ RUN apt-get update
 RUN yes | unminimize -y man manpages-posix
 RUN yes | apt-get install man
 
-RUN apt-get install -y curl
-RUN apt-get install -y git
-RUN apt-get install -y zsh
-RUN apt-get install -y tmux
-RUN apt-get install -y file
-RUN apt-get install -y iproute2
-RUN apt-get install -y xclip # For nvim to work
-RUN apt-get install -y unzip jq # For ohmyposh
+# Initial dependancies
+RUN apt-get install -y curl git zsh tmux file iproute2 xclip unzip jq # nvim needs xclip and ohmyposh needs unzip locales
+
+# This is for pipenv (so it won't stuff up when using the help option)
+RUN apt-get install locales
+RUN locale-gen en_US.UTF-8 
+RUN echo 'LANG=en_US.UTF-8' >> /etc/default/locale 
+RUN echo 'LC_ALL=en_US.UTF-8' >> /etc/default/locale
+
+# For AZ CLI
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash # For AZ CLI
 
 # For gh cli and it's dependencies
@@ -31,7 +33,7 @@ RUN apt-get install -y wget apt-transport-https software-properties-common && \
     source /etc/os-release && \
     wget -q https://packages.microsoft.com/config/ubuntu/$VERSION_ID/packages-microsoft-prod.deb && \
     dpkg -i packages-microsoft-prod.deb && \
-    rm packages-microsoft-prod.deb && \
+    rm packages-microsoft-prod.deb && \ 
     apt-get update && \
     apt-get install -y powershell
 
@@ -39,7 +41,7 @@ RUN apt-get install -y wget apt-transport-https software-properties-common && \
 SHELL ["/usr/bin/pwsh", "-command"]
 RUN Install-Module -Name Az -Repository PSGallery -Scope AllUsers -Force
 
-# Rever shell back to bash
+# Revert shell back to bash
 SHELL ["/usr/bin/bash", "-c"]
 
 # Install Terraform and it's dependencies
@@ -66,7 +68,13 @@ RUN curl -o script.py https://bootstrap.pypa.io/get-pip.py && \
 RUN apt-get install sudo
 RUN useradd testuser1 --create-home --groups sudo --shell /usr/bin/zsh && printf "WeakPassword\nWeakPassword" | passwd testuser1
 
+######################################## Configure pipenv & pyenv ########################################
+USER testuser1
+RUN curl https://pyenv.run | bash
+RUN pip install pipenv --user
+
 ######################################## Configure zsh ########################################
+USER root
 RUN curl -s https://ohmyposh.dev/install.sh | bash -s -- -d /usr/local/bin
 USER testuser1
 WORKDIR /home/testuser1
@@ -144,9 +152,18 @@ zle -N history-beginning-search-forward-end history-search-end
 bindkey "^[OA" history-beginning-search-backward-end
 bindkey "^[OB" history-beginning-search-forward-end
 
+# Include pip in the PATH variable
+export PATH="${HOME}/.local/bin:${PATH}"
+
+# Include pyenv in the path variable
+export PYENV_ROOT="${HOME}/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
 EOF
 
 RUN exec zsh
+
 
 # Create a script which helps change the appearance
 RUN cat <<'EOF' > ${HOME}/change_oh_my_posh_appearance_zsh.sh
@@ -253,6 +270,14 @@ zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
 bindkey "^[OA" history-beginning-search-backward-end
 bindkey "^[OB" history-beginning-search-forward-end
+
+# Include pip in the PATH variable
+export PATH="${HOME}/.local/bin:${PATH}"
+
+# Include pyenv in the path variable
+export PYENV_ROOT="${HOME}/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
 
 EOL
 
@@ -441,7 +466,7 @@ keymap.set("n", "<leader>nh", ":set nohls<CR>")
 keymap.set("n", "<leader>hh", ":set hls<CR>")
 
 -- Delete single character without copying into register
-keymap.set("n", "x", "_x")
+keymap.set('n', 'x', '"_x')
 
 -- window management
 keymap.set("n", "<leader>sv", "<C-w>v") -- split windows vertically
@@ -640,7 +665,7 @@ RUN chmod u+x ${HOME}/install-vscode-extensions.sh
 ######################################## README markdown file ########################################
 RUN cat <<EOF > ${HOME}/README.md
 To initialise the main components in the dev container:
-- Make sure that you are attached to the container with VSCode's "Dev Containers" extension.
+- Make sure that you are attached to the container with VSCodes "Dev Containers" extension.
 - Run the script located at "${HOME}/install-vscode-extensions.sh" to install all th extensions you wrote down in the Dockerfile.
 - Type the command "nvim". This will insall all the necessary plugins so that in any subsequent call to "nvim" it will be configured.
 - Type the command "tmux". Then type "<C-a>I" and then "<C-a>r". This will install the necessary plugins so that in any subsequent call to "tmux" it will be configured.
