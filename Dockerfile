@@ -52,6 +52,13 @@ RUN apt-get install -y gnupg software-properties-common && \
     apt-get update && \
     apt-get install terraform
 
+# Install Terraform-docs
+RUN curl -sSLo ./terraform-docs.tar.gz https://terraform-docs.io/dl/v0.18.0/terraform-docs-v0.18.0-$(uname)-amd64.tar.gz
+RUN tar -xzf terraform-docs.tar.gz
+RUN chmod a+x terraform-docs
+RUN mv terraform-docs /usr/local/bin
+RUN rm LICENSE README.md terraform-docs.tar.gz
+
 # Install nodejs
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
     apt-get install -y nodejs
