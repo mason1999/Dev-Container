@@ -53,11 +53,25 @@ RUN apt-get install -y gnupg software-properties-common && \
     apt-get install terraform
 
 # Install Terraform-docs
-RUN curl -sSLo ./terraform-docs.tar.gz https://terraform-docs.io/dl/v0.18.0/terraform-docs-v0.18.0-$(uname)-amd64.tar.gz
-RUN tar -xzf terraform-docs.tar.gz
-RUN chmod a+x terraform-docs
-RUN mv terraform-docs /usr/local/bin
-RUN rm LICENSE README.md terraform-docs.tar.gz
+RUN curl -sSLo ./terraform-docs.tar.gz https://terraform-docs.io/dl/v0.18.0/terraform-docs-v0.18.0-$(uname)-amd64.tar.gz && \
+    tar -xzf terraform-docs.tar.gz && \
+    chmod a+x terraform-docs && \
+    mv terraform-docs /usr/local/bin && \
+    rm LICENSE README.md terraform-docs.tar.gz
+
+# Install sqlcmd
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | tee /etc/apt/trusted.gpg.d/microsoft.asc && \
+    add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/20.04/prod.list)" && \
+    apt-get update && \
+    apt-get install sqlcmd
+
+# Install sqlpackage
+RUN apt-get update && \
+    apt-get install libunwind8 && \
+    curl -sSLo ./sql-package-download https://aka.ms/sqlpackage-linux && \
+    unzip sql-package-download -d ./sqlpackage && \
+    rm sql-package-download && \
+    mv sqlpackage /usr/local/bin
 
 # Install nodejs
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
@@ -172,6 +186,9 @@ export PATH="${HOME}/.local/bin:${PATH}"
 export PYENV_ROOT="${HOME}/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
+
+# Inlcude sqlpackage in the path variable
+export PATH="/usr/local/bin/sqlpackage:$PATH"
 
 EOF
 
@@ -292,6 +309,8 @@ export PYENV_ROOT="${HOME}/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
+# Inlcude sqlpackage in the path variable
+export PATH="/usr/local/bin/sqlpackage:$PATH"
 EOL
 
 echo -e "${GREEN}To see the new configuration execute the command 'exec zsh'."
