@@ -100,6 +100,10 @@ USER testuser1
 RUN curl https://pyenv.run | bash
 RUN pip install pipenv --user
 
+######################################## Configure sqlpackage ########################################
+USER root
+RUN chmod -R a+rwx /usr/local/bin/sqlpackage
+
 ######################################## Configure zsh ########################################
 USER root
 RUN curl -s https://ohmyposh.dev/install.sh | bash -s -- -d /usr/local/bin
