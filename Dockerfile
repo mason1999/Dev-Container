@@ -65,14 +65,6 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | tee /etc/apt/truste
     apt-get update && \
     apt-get install sqlcmd
 
-# Install sqlpackage
-RUN apt-get update && \
-    apt-get install libunwind8 && \
-    curl -sSLo ./sql-package-download https://aka.ms/sqlpackage-linux && \
-    unzip sql-package-download -d ./sqlpackage && \
-    rm sql-package-download && \
-    mv sqlpackage /usr/local/bin
-
 # Install nodejs
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
     apt-get install -y nodejs
@@ -99,10 +91,6 @@ RUN useradd testuser1 --create-home --groups sudo --shell /usr/bin/zsh && printf
 USER testuser1
 RUN curl https://pyenv.run | bash
 RUN pip install pipenv --user
-
-######################################## Configure sqlpackage ########################################
-USER root
-RUN chmod -R a+rwx /usr/local/bin/sqlpackage
 
 ######################################## Configure zsh ########################################
 USER root
@@ -190,9 +178,6 @@ export PATH="${HOME}/.local/bin:${PATH}"
 export PYENV_ROOT="${HOME}/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
-
-# Inlcude sqlpackage in the path variable
-export PATH="/usr/local/bin/sqlpackage:$PATH"
 
 EOF
 
@@ -313,8 +298,6 @@ export PYENV_ROOT="${HOME}/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
-# Inlcude sqlpackage in the path variable
-export PATH="/usr/local/bin/sqlpackage:$PATH"
 EOL
 
 echo -e "${GREEN}To see the new configuration execute the command 'exec zsh'."
