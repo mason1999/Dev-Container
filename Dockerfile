@@ -179,6 +179,9 @@ export PYENV_ROOT="${HOME}/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
+bindkey "\e[1;5C" forward-word
+bindkey "\e[1;5D" backward-word
+
 EOF
 
 RUN exec zsh
@@ -401,7 +404,7 @@ RUN chmod u+x ${HOME}/change_oh_my_posh_appearance_pwsh.sh
 ######################################## Nvim Installation ########################################
 USER root
 WORKDIR /
-RUN curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage && chmod u+x nvim.appimage && ./nvim.appimage --appimage-extract
+RUN curl -L https://github.com/neovim/neovim/releases/download/v0.11.2/nvim-linux-x86_64.appimage -o nvim.appimage && chmod u+x nvim.appimage && ./nvim.appimage --appimage-extract
 RUN ln -s /squashfs-root/AppRun /usr/bin/nvim
 
 USER testuser1
@@ -616,13 +619,13 @@ bind N split-window -v
 unbind r
 bind r source-file ~/.tmux.conf
 
-# Use <C-a>[h|j|k|l] to resize the pane by 5 units
+# Use <C-a>[Left|Down|Up|Right] to resize the pane by 5 units
 # Use <C-a>m to maximise the tmux pane
 # Enable the mouse to be able to maximise
-bind -r j resize-pane -D 5
-bind -r k resize-pane -U 5
-bind -r l resize-pane -R 5
-bind -r h resize-pane -L 5
+bind -r Down resize-pane -D 5
+bind -r Up resize-pane -U 5
+bind -r Right resize-pane -R 5
+bind -r Left resize-pane -L 5
 bind -r m resize-pane -Z
 set -g mouse on
 
@@ -630,11 +633,17 @@ set -g mouse on
 unbind t
 bind t new-window
 
-# Use <C-n> and <C-p> to go to the next and previous window
-unbind C-h
-unbind C-l
-bind-key -n C-n previous-window
-bind-key -n C-p next-window
+# Use <C-[> and <C-]> to go to the next and previous window
+unbind [
+unbind ]
+bind-key -n C-[ previous-window
+bind-key -n C-] next-window
+
+# Use <Alt-h>, <Alt-j>, <Alt-k> and <Alt-l> to move left, down, up and right respectively
+bind-key -n M-h select-pane -L
+bind-key -n M-j select-pane -D
+bind-key -n M-k select-pane -U
+bind-key -n M-l select-pane -R
 
 # Use <C-a>q to kill the pane
 unbind q
