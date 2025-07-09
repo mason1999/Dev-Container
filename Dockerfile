@@ -633,11 +633,11 @@ set -g mouse on
 unbind t
 bind t new-window
 
-# Use <C-[> and <C-]> to go to the next and previous window
-unbind [
-unbind ]
-bind-key -n C-[ previous-window
-bind-key -n C-] next-window
+# Use <C-Left> and <C-Right> to go to the next and previous window
+unbind Left
+unbind Right
+bind-key -n C-Left previous-window
+bind-key -n C-Right next-window
 
 # Use <Alt-h>, <Alt-j>, <Alt-k> and <Alt-l> to move left, down, up and right respectively
 bind-key -n M-h select-pane -L
